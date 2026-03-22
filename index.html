@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="ar" dir="rtl" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oraimo Product Catalog</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Almarai', 'Tajawal', sans-serif; box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    :root {
+      --luxury-dark: #0a0a13;
+      --luxury-card: #131322;
+      --luxury-accent: #e8a137;
+      --luxury-gold: #f4c430;
+      --luxury-text: #f7f3eb;
+      --luxury-muted: #8b7d6b;
+    }
+
+    body {
+      background: linear-gradient(135deg, #0a0a13 0%, #1a1519 50%, #0f0f1e 100%);
+      color: var(--luxury-text);
+    }
+
+    @keyframes pageEnter {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .page-content { animation: pageEnter 0.6s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+    .detail-page-overlay { animation: fadeInOverlay 0.4s ease-out; }
+    @keyframes fadeInOverlay {
+      from { opacity: 0; backdrop-filter: blur(0px); }
+      to { opacity: 1; backdrop-filter: blur(8px); }
+    }
+
+    .detail-page-content { animation: slideUpDetail 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    @keyframes slideUpDetail {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .product-card {
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1.5px solid rgba(232, 161, 55, 0.15);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 14px 40px rgba(232, 161, 55, 0.1), inset 0 1px 0 rgba(255,255,255,0.04);
+    }
+
+    .product-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent, rgba(232, 161, 55, 0.12));
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(232, 161, 55, 0.5);
+      box-shadow: 0 24px 60px rgba(232, 161, 55, 0.18), 0 0 80px rgba(232, 161, 55, 0.08);
+    }
+    .product-card:hover::before { opacity: 1; }
+
+    .img-container {
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(250,250,250,0.96) 50%, rgba(245,245,245,0.92) 100%);
+      position: relative;
+      height: 240px;
+      transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: inset 0 10px 24px rgba(232, 161, 55, 0.12), inset 0 -10px 24px rgba(0,0,0,0.05);
+    }
+    .product-card:hover .img-container { transform: scale(1.04); }
+    .product-card:hover .img-container img { transform: scale(1.12) rotate(2deg); }
+
+    .img-container img {
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      filter: drop-shadow(0 10px 28px rgba(232, 161, 55, 0.2));
+      animation: imageReveal 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes imageReveal {
+      0% { clip-path: polygon(50% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%); opacity: 1; }
+    }
+
+    .price-tag {
+      background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .category-pill {
+      backdrop-filter: blur(12px);
+      background: rgba(232, 161, 55, 0.12);
+      border: 1.5px solid rgba(232, 161, 55, 0.35);
+      color: var(--luxury-accent);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: 600;
+    }
+    .category-pill:hover {
+      background: rgba(232, 161, 55, 0.25);
+      border-color: rgba(232, 161, 55, 0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(232, 161, 55, 0.2);
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(10, 10, 19, 0.98), rgba(19, 19, 34, 0.98));
+      backdrop-filter: blur(25px);
+      border-bottom: 2px solid rgba(232, 161, 55, 0.3);
+      box-shadow: 0 12px 40px rgba(232, 161, 55, 0.12), inset 0 1px 0 rgba(232, 161, 55, 0.2);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232, 161, 55, 0.4), transparent);
+    }
+
+    .header-glow {
+      background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .promo-banner {
+      animation: slideDown 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: linear-gradient(90deg, rgba(232, 161, 55, 0.15), rgba(244, 196, 48, 0.12), rgba(232, 161, 55, 0.15));
+      border-bottom: 2px solid rgba(232, 161, 55, 0.35);
+      color: var(--luxury-accent);
+      box-shadow: inset 0 1px 0 rgba(232, 161, 55, 0.3), 0 8px 20px rgba(232, 161, 55, 0.15);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .promo-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      animation: shimmerPromo 3s infinite;
+    }
+
+    @keyframes shimmerPromo {
+      0% { left: -100%; }
+      50% { left: 100%; }
+      100% { left: 100%; }
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    .fade-in {
+      animation: fadeInScale 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+      opacity: 0;
+    }
+
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.92) translateY(20px); }
+      50% { transform: scale(0.98); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .btn-luxury {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.18), rgba(244, 196, 48, 0.1));
+      border: 1.5px solid rgba(232, 161, 55, 0.5);
+      color: var(--luxury-accent);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .btn-luxury:hover {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.3), rgba(244, 196, 48, 0.2));
+      border-color: rgba(232, 161, 55, 0.8);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(232, 161, 55, 0.25);
+    }
+
+    .search-box {
+      background: rgba(232, 161, 55, 0.08);
+      border: 1.5px solid rgba(232, 161, 55, 0.25);
+      color: var(--luxury-text);
+      transition: all 0.3s ease;
+    }
+    .search-box:focus-within {
+      background: rgba(232, 161, 55, 0.15);
+      border-color: rgba(232, 161, 55, 0.6);
+      box-shadow: 0 0 25px rgba(232, 161, 55, 0.25);
+    }
+
+    .stat-box {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.1), rgba(244, 196, 48, 0.05));
+      border: 1.5px solid rgba(232, 161, 55, 0.3);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .stat-box:hover {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.15), rgba(244, 196, 48, 0.1));
+      border-color: rgba(232, 161, 55, 0.6);
+      transform: translateY(-6px);
+      box-shadow: 0 12px 28px rgba(232, 161, 55, 0.18);
+    }
+    .stat-number { font-size: 18px; font-weight: 900; color: var(--luxury-accent); }
+    .stat-label { font-size: 10px; opacity: 0.6; margin-top: 4px; color: var(--luxury-muted); }
+
+    footer {
+      background: linear-gradient(135deg, rgba(10, 10, 19, 0.95), rgba(19, 19, 34, 0.95));
+      border-top: 2px solid rgba(232, 161, 55, 0.3);
+      box-shadow: 0 -12px 40px rgba(232, 161, 55, 0.12), inset 0 1px 0 rgba(232, 161, 55, 0.2);
+      position: relative;
+    }
+    footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(232, 161, 55, 0.4), transparent);
+    }
+
+    .close-detail-btn {
+      background: rgba(232, 161, 55, 0.12);
+      color: var(--luxury-accent);
+      border: 1.5px solid rgba(232, 161, 55, 0.3);
+      transition: all 0.3s ease;
+    }
+    .close-detail-btn:hover {
+      background: rgba(232, 161, 55, 0.22);
+      border-color: rgba(232, 161, 55, 0.6);
+      transform: scale(1.08);
+    }
+
+    .zoom-container { transform-origin: top center; transition: transform 0.2s ease; }
+
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(232, 161, 55, 0.06); }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.5), rgba(244, 196, 48, 0.4));
+      border-radius: 4px;
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.7), rgba(244, 196, 48, 0.6));
+    }
+
+    @media (max-width: 768px) {
+      .detail-page-content { max-height: 90vh !important; }
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: #000 !important; }
+      .product-card, .stat-box { break-inside: avoid; box-shadow: none !important; }
+    }
+  </style>
+</head>
+<body class="h-full overflow-auto">
+  <div id="app-root" class="w-full h-full" style="min-height: 100%;">
+    <div id="promoBanner" class="promo-banner no-print text-center py-3 px-4 text-sm font-bold"></div>
+
+    <header class="no-print">
+      <div class="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4">
+        <div class="flex items-center justify-between gap-3 flex-wrap">
+          <div class="flex items-center gap-2 sm:gap-3 min-w-0">
+            <div class="w-16 sm:w-20 h-16 sm:h-20 rounded-3xl flex-shrink-0 flex items-center justify-center"
+                 style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(201, 169, 97, 0.3)); backdrop-filter: blur(15px); border: 2.5px solid rgba(212, 175, 55, 0.6); box-shadow: 0 0 80px rgba(212, 175, 55, 0.5), 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 40px rgba(212, 175, 55, 0.2); overflow: hidden; position: relative;">
+              <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); border-radius: 24px;"></div>
+              <img id="logoImg" src="https://i.postimg.cc/3yTcWR5C/logo.png" alt="Logo"
+                   style="width:85%;height:85%;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(212, 175, 55, 0.5)); position: relative; z-index: 1;"
+                   loading="lazy"
+                   onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cdefs%3E%3ClinearGradient id=%22grad%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22%3E%3Cstop offset=%220%25%22 style=%22stop-color:%23d4af37;stop-opacity:1%22/%3E%3Cstop offset=%22100%25%22 style=%22stop-color:%23c9a961;stop-opacity:1%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22url(%23grad)%22/%3E%3Ctext x=%2250%22 y=%2265%22 font-size=%2250%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23000%22 font-family=%22Arial%22%3EO%3C/text%3E%3C/svg%3E';">
+            </div>
+            <div class="min-w-0">
+              <h1 id="header-title" class="text-lg sm:text-2xl font-black tracking-tight header-glow truncate"></h1>
+              <p id="header-company" class="text-xs sm:text-sm font-bold opacity-80" style="color: var(--luxury-muted);"></p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2 sm:gap-3 flex-wrap justify-end">
+            <div class="flex items-center gap-2 px-2 sm:px-3 py-2 rounded-xl search-box">
+              <i data-lucide="search" style="width:16px;height:16px;opacity:0.6;color:var(--luxury-accent);"></i>
+              <input id="searchInput" type="text" placeholder="بحث..." class="bg-transparent outline-none text-xs sm:text-sm w-24 sm:w-40" style="border:none;color:var(--luxury-text);">
+            </div>
+            <div class="flex items-center gap-1 px-2 py-1 rounded-lg" style="background: rgba(212, 175, 55, 0.08);border: 1px solid rgba(212, 175, 55, 0.2);">
+              <button id="zoomOutBtn" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors" type="button" aria-label="تصغير">
+                <i data-lucide="zoom-out" style="width:16px;height:16px;color:var(--luxury-accent);"></i>
+              </button>
+              <span id="zoomLabel" class="text-xs font-mono px-1 opacity-60">100%</span>
+              <button id="zoomInBtn" class="p-1.5 rounded-lg hover:bg-white/10 transition-colors" type="button" aria-label="تكبير">
+                <i data-lucide="zoom-in" style="width:16px;height:16px;color:var(--luxury-accent);"></i>
+              </button>
+            </div>
+            <button id="printBtn" class="p-2 rounded-lg hover:bg-white/10 transition-colors" title="طباعة" type="button" aria-label="طباعة">
+              <i data-lucide="printer" style="width:18px;height:18px;color:var(--luxury-accent);"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex gap-2 mt-3 overflow-x-auto pb-1 sm:pb-2" id="categoryFilters"></div>
+      </div>
+    </header>
+
+    <main class="w-full px-3 sm:px-4 md:px-6 py-4 sm:py-6 page-content">
+      <div id="quickStats" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6"></div>
+      <div id="productsContainer" class="zoom-container origin-top">
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"></div>
+      </div>
+      <div id="noResults" class="hidden text-center py-20 opacity-50">
+        <i data-lucide="search" style="width:48px;height:48px;margin:0 auto 16px;display:block;color:var(--luxury-muted);"></i>
+        <p class="text-lg">لا توجد نتائج</p>
+      </div>
+    </main>
+
+    <div id="detailPageOverlay" class="hidden detail-page-overlay fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" style="backdrop-filter: blur(0px);">
+      <div id="detailPageContent" class="detail-page-content w-full sm:max-w-2xl max-h-screen sm:max-h-[90vh] overflow-y-auto rounded-t-3xl sm:rounded-3xl p-4 sm:p-6" style="background: linear-gradient(135deg, var(--luxury-card), #252540); border: 1px solid rgba(212, 175, 55, 0.3);">
+        <div class="flex justify-between items-start mb-4">
+          <h2 id="detailTitle" class="text-xl sm:text-2xl font-black header-glow flex-1"></h2>
+          <button id="closeDetailBtn" class="p-2 rounded-lg close-detail-btn flex-shrink-0" type="button" aria-label="إغلاق">
+            <i data-lucide="x" style="width:20px;height:20px;"></i>
+          </button>
+        </div>
+
+        <div id="imageCarousel" class="mb-6 relative" style="height:300px;border-radius:16px;border:1.5px solid rgba(212, 175, 55, 0.2); overflow: hidden; background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(250,250,250,0.96) 50%, rgba(245,245,245,0.92) 100%);">
+          <img id="detailImage" src="" alt="" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 10px 30px rgba(212, 175, 55, 0.2));">
+          <button id="prevImageBtn" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full transition-all hover:scale-110" style="background: rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.4); color: var(--luxury-accent);" type="button" aria-label="الصورة السابقة">
+            <i data-lucide="chevron-left" style="width:20px;height:20px;"></i>
+          </button>
+          <button id="nextImageBtn" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 p-2 rounded-full transition-all hover:scale-110" style="background: rgba(212, 175, 55, 0.2); border: 1px solid rgba(212, 175, 55, 0.4); color: var(--luxury-accent);" type="button" aria-label="الصورة التالية">
+            <i data-lucide="chevron-right" style="width:20px;height:20px;"></i>
+          </button>
+          <div id="imageCounter" class="absolute bottom-2 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full text-xs font-bold" style="background: rgba(0,0,0,0.5); color: var(--luxury-text);">1 / 1</div>
+        </div>
+
+        <div id="detailBody" class="space-y-4 sm:space-y-5"></div>
+
+        <div class="grid grid-cols-3 gap-2 mt-6 sm:mt-8">
+          <button id="shareDetailBtn" class="btn-luxury px-2 sm:px-3 py-2 sm:py-3 rounded-lg text-xs flex items-center justify-center flex-col gap-1" type="button">
+            <i data-lucide="share-2" style="width:16px;height:16px;"></i>
+            <span>شارك</span>
+          </button>
+          <button id="installmentDetailBtn" class="px-2 sm:px-3 py-2 sm:py-3 rounded-lg text-xs flex items-center justify-center flex-col gap-1 btn-luxury" type="button">
+            <i data-lucide="credit-card" style="width:16px;height:16px;"></i>
+            <span>تقسيط</span>
+          </button>
+          <button id="contactDetailBtn" class="btn-luxury px-2 sm:px-3 py-2 sm:py-3 rounded-lg text-xs flex items-center justify-center flex-col gap-1" type="button">
+            <i data-lucide="send" style="width:16px;height:16px;"></i>
+            <span>اطلب</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <footer class="no-print mt-8 py-6 text-center w-full">
+      <p id="footer-text" class="text-xs sm:text-sm opacity-50 px-4"></p>
+      <div class="flex justify-center gap-2 sm:gap-4 mt-4 flex-wrap px-4">
+        <a id="whatsappLink" href="#" class="btn-luxury flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm" style="text-decoration:none;">
+          <i data-lucide="message-circle" style="width:16px;height:16px;"></i>
+          <span>واتساب</span>
+        </a>
+        <a id="phoneLink" href="#" class="btn-luxury flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm" style="text-decoration:none;">
+          <i data-lucide="phone" style="width:16px;height:16px;"></i>
+          <span>اتصل</span>
+        </a>
+        <a href="https://www.facebook.com/share/1CcDfdjcMQ/" target="_blank" rel="noopener noreferrer" class="opacity-40 hover:opacity-80 transition-opacity" aria-label="Facebook">
+          <i data-lucide="facebook" style="width:18px;height:18px;"></i>
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <div id="installmentModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50" style="backdrop-filter: blur(8px);">
+    <div class="w-full sm:max-w-md rounded-2xl p-4 sm:p-6 max-h-[80vh] overflow-y-auto" style="background: linear-gradient(135deg, var(--luxury-card), #252540); border: 1px solid rgba(212, 175, 55, 0.3);">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg sm:text-xl font-black header-glow">خيارات التقسيط</h3>
+        <button id="closeInstallmentBtn" class="p-2 rounded-lg close-detail-btn" type="button" aria-label="إغلاق خيارات التقسيط">
+          <i data-lucide="x" style="width:18px;height:18px;"></i>
+        </button>
+      </div>
+      <div id="installmentContent" class="space-y-3"></div>
+    </div>
+  </div>
+
+  <script>
+    const calculatePrices = (wholesale) => {
+      const semi = Math.ceil((wholesale * 1.10) / 5) * 5;
+      const retail = Math.ceil((wholesale * 1.15) / 10) * 10;
+      return { semi, retail };
+    };
+
+    const rawProducts = [
+      { id:1, category:'Smart Watch', model:'OSW-801 (Watch 4 Plus)', wholesale:2250, feature:'شاشة HD 2 بوصة + مكالمات بلوتوث', detail:'شاشة HD لمس كاملة 2.01 بوصة - دعم مكالمات بلوتوث 5.3 - أكثر من 100 وضع رياضي - مراقبة معدل ضربات القلب وتشبع الأكسجين - مقاومة للماء IP68 - بطارية تدوم 7 أيام - معالج ذكي وسريع - تصميم أسود فاخر.', images:['https://m.media-amazon.com/images/I/61Yj9K3WJrL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61dK8ZWawjL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61uW5-DehTL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61QMl7jqw1L._AC_SY450_.jpg'] },
+      { id:2, category:'Smart Watch', model:'OSW-820 (Watch 3 Pro)', wholesale:1600, feature:'شاشة AMOLED 1.43 بوصة أنيقة', detail:'شاشة AMOLED ملونة واضحة جداً - اتصال بلوتوث 5.3 سلس - تتبع معدل ضربات القلب والخطوات والنوم - تصميم أسود أنيق وقوي - مراقبة شاملة للياقة البدنية - بطارية 7 أيام - مناسب للاستخدام اليومي والنشط.', images:['https://m.media-amazon.com/images/I/410Y-wvmHxL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/91RRsnndsaL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/61KdxLIKnmL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61ORLbGRpCL._AC_SY450_.jpg'] },
+      { id:3, category:'Smart Watch', model:'OSW-823 (Watch Lite)', wholesale:1200, feature:'مكالمات + شاشة HD 1.38 بوصة', detail:'مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - شاشة HD ملونة 1.38 بوصة - تتبع صحة 24 ساعة (نبضات القلب وتشبع الأكسجين) - أكثر من 100 وضع رياضي - مقاومة للماء IP68 - بطارية تدوم 7 أيام - تصميم متين ومقاوم للغبار.', images:['https://m.media-amazon.com/images/I/51JQKqlQkZL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/51hQ1EVFKDL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41JQZiXBLgL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41ASq5SxrJL._AC_SY450_.jpg'] },
+      { id:4, category:'Smart Watch', model:'OSW-804 (Watch ER)', wholesale:1050, feature:'شاشة لمس HD 2 بوصة ذكية', detail:'شاشة لمس كاملة HD 2 بوصة عالية الدقة مع وضوح حيوي وألوان نابضة - مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - مراقبة معدل نبضات القلب ومستوى الأكسجين في الدم - 105 أوضاع رياضية متنوعة - مقاومة للماء والغبار IP68 - بطارية 7 أيام استخدام و 28 يوم استعداد - أدوات ذكية متعددة.', images:['https://m.media-amazon.com/images/I/41kxbkppx+L._AC_.jpg', 'https://m.media-amazon.com/images/I/61Zyxg83hfL._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/61RF1EYqB1L._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/51NPBd65xiL._AC_SX679_.jpg'] },
+      { id:7, category:'Audio', model:'OHP-917 (BoomPop Pro)', wholesale:2150, feature:'صوت غامر + Heavy Bass 40mm', detail:'مشغلات 40 ملم بتقنية هافي باس قوية - صوت عميق وديناميكي غامر - تقنية ANC متقدمة مع ميكروفونات عالية الحساسية - مكالمات واضحة جداً - مواد ممتازة بنية قوية جداً - تصميم احترافي رمادي جرافيت - أداء متين وطويل الأمد.', images:['https://m.media-amazon.com/images/I/41hYTbCtfML._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/81ygKBj01bL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/71kRM8u-XvL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/81+bVNLvfvL._AC_SY606_.jpg'] },
+      { id:8, category:'Audio', model:'OEB-E104DC (FreePods 3)', wholesale:1550, feature:'بلوتوث 5.2 + 36 ساعة تشغيل', detail:'اتصال بلوتوث 5.2 مستقر وسريع - وقت تشغيل إجمالي 36 ساعة (9 ساعات + 27 ساعة من العلبة) - 4 ميكروفونات ANC لمكالمات واضحة - صوت باس عميق وديناميكي رائع - مقاومة للماء IPX5 - شحن سريع - تحكم باللمس ذكي - تصميم أسود خفيف الوزن.', images:['https://m.media-amazon.com/images/I/61RuDMWoDYL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/6135YuoVhcL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61qxBRhUeAL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/719SNiHWISL._AC_SY450_.jpg'] },
+      { id:9, category:'Audio', model:'OTW-625 (FreePods Lite)', wholesale:1150, feature:'صوت نقي + بطارية 40 ساعة', detail:'تصميم أسود مريح للأذن وخفيف الوزن جداً - بطارية تدوم 40 ساعة إجمالية مع العلبة (8 ساعات من الشحنة الواحدة) - مقاومة للعرق والماء IPX4 - صوت نقي وواضح - تحكم باللمس سهل الاستخدام - شحن سريع فعال - مثالي للاستخدام اليومي والرياضة.', images:['https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t151933.157_2.jpg', 'https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t152019.081_2.jpg'] },
+      { id:10, category:'Power', model:'OPB-P5201 (PowerGo Ultra)', wholesale:1650, feature:'20000mAh + 4 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 20000 ملي أمبير ضخمة - 4 كابلات مدمجة (USB-C، Micro USB، Lightning، USB-A) - شحن حتى 4 أجهزة معاً في وقت واحد - مصباح LED قوي مع منبه SOS - حماية ذكية من التيار المنخفض - موصلات نحاسية عالية الجودة - تصميم متين مقاوم للالتفاف - شحن سريع 12 واط.', images:['https://m.media-amazon.com/images/I/61pl+tAmrWL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71EJcdphYRL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71YkTI7Qf+L._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/61dZAlkHhyL._AC_SX466_.jpg'] },
+      { id:11, category:'Power', model:'OPB-P5101 (PowerGo)', wholesale:950, feature:'10000mAh + 3 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 10000 ملي أمبير - 3 كابلات مدمجة (USB-C، Micro USB، Lightning) - 2 منفذ USB-A للشحن السريع - شحن سريع 12 وات - حماية متعددة الطبقات - تصميم أخضر مريح - وزن خفيف 200 جرام - مثالي للرحلات اليومية.', images:['https://m.media-amazon.com/images/I/51I2C10W3AL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41+fo-UfrJL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41JXM7Rt0PL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41Am1Yf4+7L._AC_SX466_.jpg'] },
+    ];
+
+    const products = rawProducts.map(p => {
+      const { semi, retail } = calculatePrices(p.wholesale);
+      return { ...p, semi, retail };
+    });
+
+    const categories = ['الكل', ...new Set(products.map(p => p.category))];
+    const categoryIcons = { 'Smart Watch': 'watch', 'Audio': 'headphones', 'Power': 'battery', 'Cables': 'link' };
+    const categoryLabels = { 'Smart Watch': 'ساعات ذكية', 'Audio': 'سماعات', 'Power': 'باور بانك', 'Cables': 'كابلات' };
+
+    const defaultConfig = {
+      catalog_title: 'كتالوج المنتجات',
+      company_name: 'بيت العز',
+      promo_text: '🎉 اطلب الآن واحصل على خصم حتى 20% على كل المنتجات!',
+      footer_text: 'جميع الأسعار قابلة للتغيير - تواصل معنا للطلبات',
+      whatsapp_number: '201270296054',
+      phone_number: '+20100123456',
+      background_color: '#0f0f1e',
+      surface_color: '#1a1a2e',
+      text_color: '#f5f1e8',
+      primary_action_color: '#d4af37',
+      secondary_action_color: '#c9a961',
+      font_family: 'Almarai',
+      font_size: 14
+    };
+
+    const appConfig = { ...defaultConfig };
+
+    let activeCategory = 'الكل';
+    let searchTerm = '';
+    let zoomLevel = 1;
+    let selectedProduct = null;
+    let currentImageIndex = 0;
+    let carouselInterval = null;
+
+    const sanitizePhone = (value) => String(value || '').replace(/[^\d]/g, '');
+
+    function reinitIcons() {
+      if (window.lucide && typeof window.lucide.createIcons === 'function') {
+        window.lucide.createIcons();
+      }
+    }
+
+    function stopCarousel() {
+      if (carouselInterval) {
+        clearInterval(carouselInterval);
+        carouselInterval = null;
+      }
+    }
+
+    function updateImageCounter() {
+      const counter = document.getElementById('imageCounter');
+      if (!selectedProduct) {
+        counter.textContent = '0 / 0';
+        return;
+      }
+      counter.textContent = `${currentImageIndex + 1} / ${selectedProduct.images.length}`;
+    }
+
+    function showCurrentDetailImage() {
+      if (!selectedProduct) return;
+      const img = document.getElementById('detailImage');
+      img.src = selectedProduct.images[currentImageIndex];
+      img.alt = selectedProduct.model;
+      updateImageCounter();
+    }
+
+    function startCarousel() {
+      stopCarousel();
+      if (!selectedProduct || selectedProduct.images.length <= 1) return;
+      carouselInterval = setInterval(() => {
+        const overlayHidden = document.getElementById('detailPageOverlay').classList.contains('hidden');
+        if (overlayHidden || !selectedProduct) return;
+        currentImageIndex = (currentImageIndex + 1) % selectedProduct.images.length;
+        showCurrentDetailImage();
+      }, 5000);
+    }
+
+    function nextImage() {
+      if (!selectedProduct) return;
+      currentImageIndex = (currentImageIndex + 1) % selectedProduct.images.length;
+      showCurrentDetailImage();
+      startCarousel();
+    }
+
+    function prevImage() {
+      if (!selectedProduct) return;
+      currentImageIndex = (currentImageIndex - 1 + selectedProduct.images.length) % selectedProduct.images.length;
+      showCurrentDetailImage();
+      startCarousel();
+    }
+
+    function shareText(text, title) {
+      if (navigator.share) {
+        navigator.share({ title, text }).catch(() => {});
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('تم نسخ تفاصيل المنتج.');
+        }).catch(() => {
+          window.prompt('انسخ النص التالي:', text);
+        });
+        return;
+      }
+      window.prompt('انسخ النص التالي:', text);
+    }
+
+    function openWhatsapp(message) {
+      const whatsappNum = sanitizePhone(appConfig.whatsapp_number);
+      if (!whatsappNum) {
+        alert('رقم واتساب غير صالح.');
+        return;
+      }
+      window.open(`https://wa.me/${whatsappNum}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function openInstallmentModal(product) {
+      const months = [3, 6, 12];
+      const installmentContent = document.getElementById('installmentContent');
+      installmentContent.innerHTML = '';
+
+      months.forEach(month => {
+        const monthlyAmount = Math.ceil(product.retail / month);
+        const option = document.createElement('button');
+        option.type = 'button';
+        option.className = 'w-full p-3 sm:p-4 rounded-lg cursor-pointer transition-all text-right';
+        option.style.cssText = 'background: rgba(212, 175, 55, 0.08); border: 1.5px solid rgba(212, 175, 55, 0.2);';
+        option.innerHTML = `
+          <div class="flex justify-between items-start">
+            <div>
+              <div class="font-bold text-sm sm:text-base" style="color: var(--luxury-text);">${month} شهور</div>
+              <div class="text-xs opacity-50 mt-1">${monthlyAmount.toLocaleString('ar-EG')} ج.م / شهر</div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs opacity-60">إجمالي</div>
+              <div class="font-bold price-tag text-sm">${product.retail.toLocaleString('ar-EG')} ج.م</div>
+            </div>
+          </div>
+        `;
+        option.addEventListener('mouseenter', () => {
+          option.style.background = 'rgba(212, 175, 80, 0.12)';
+          option.style.borderColor = 'rgba(212, 175, 55, 0.4)';
+        });
+        option.addEventListener('mouseleave', () => {
+          option.style.background = 'rgba(212, 175, 55, 0.08)';
+          option.style.borderColor = 'rgba(212, 175, 55, 0.2)';
+        });
+        option.addEventListener('click', () => {
+          const message = `السلام عليكم، أود تقسيط المنتج:\n${product.model}\n\nالخيار: ${month} شهور\nالدفع الشهري: ${monthlyAmount.toLocaleString('ar-EG')} ج.م\nالإجمالي: ${product.retail.toLocaleString('ar-EG')} ج.م`;
+          openWhatsapp(message);
+          document.getElementById('installmentModal').classList.add('hidden');
+        });
+        installmentContent.appendChild(option);
+      });
+
+      document.getElementById('installmentModal').classList.remove('hidden');
+      reinitIcons();
+    }
+
+    function renderCategoryFilters() {
+      const container = document.getElementById('categoryFilters');
+      container.innerHTML = '';
+
+      categories.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        const isActive = cat === activeCategory;
+        const label = cat === 'الكل' ? 'الكل' : (categoryLabels[cat] || cat);
+        btn.className = 'category-pill flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap';
+
+        if (isActive) {
+          btn.style.cssText = 'background: linear-gradient(135deg, var(--luxury-accent), var(--luxury-gold)); color: #000; border: 1px solid rgba(212, 175, 55, 0.8);';
+        }
+
+        if (cat !== 'الكل') {
+          const icon = document.createElement('i');
+          icon.setAttribute('data-lucide', categoryIcons[cat] || 'box');
+          icon.style.cssText = 'width:13px;height:13px;';
+          btn.appendChild(icon);
+        }
+
+        const span = document.createElement('span');
+        span.textContent = label;
+        btn.appendChild(span);
+
+        btn.addEventListener('click', () => {
+          activeCategory = cat;
+          renderCategoryFilters();
+          renderProducts();
+        });
+
+        container.appendChild(btn);
+      });
+
+      reinitIcons();
+    }
+
+    function createProductCard(product, index) {
+      const surfaceColor = appConfig.surface_color || defaultConfig.surface_color;
+      const textColor = appConfig.text_color || defaultConfig.text_color;
+
+      const card = document.createElement('div');
+      card.className = 'product-card rounded-xl sm:rounded-2xl overflow-hidden fade-in cursor-pointer';
+      card.style.animationDelay = `${index * 0.06}s`;
+      card.style.background = `linear-gradient(135deg, ${surfaceColor}, #252540)`;
+
+      const priceUpPercent = Math.round((product.semi - product.wholesale) / product.wholesale * 100);
+      const priceUpPercent2 = Math.round((product.retail - product.wholesale) / product.wholesale * 100);
+
+      card.innerHTML = `
+        <div class="img-container relative">
+          <div class="absolute top-2 right-2 z-10 flex gap-1.5 flex-wrap px-2">
+            <span class="px-2 py-1 rounded-full text-[10px] font-bold category-pill" style="background: rgba(212, 175, 55, 0.15); color: var(--luxury-accent); border: 1px solid rgba(212, 175, 55, 0.3);">${categoryLabels[product.category] || product.category}</span>
+          </div>
+          <img src="${product.images[0]}" alt="${product.model}" loading="lazy" class="w-full h-full object-contain p-4" onerror="this.style.display='none'; this.parentElement.innerHTML += '<div style=&quot;display:flex;align-items:center;justify-content:center;height:100%;opacity:0.3;&quot;><svg width=&quot;48&quot; height=&quot;48&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;1.5&quot;><rect x=&quot;3&quot; y=&quot;3&quot; width=&quot;18&quot; height=&quot;18&quot; rx=&quot;2&quot;/><circle cx=&quot;8.5&quot; cy=&quot;8.5&quot; r=&quot;1.5&quot;/><path d=&quot;m21 15-5-5L5 21&quot;/></svg></div>';">
+        </div>
+        <div class="p-3 sm:p-4 space-y-2 sm:space-y-3">
+          <div>
+            <h3 class="font-bold text-sm sm:text-base leading-tight" style="color: ${textColor};">${product.model}</h3>
+            <div class="flex items-center gap-1 mt-1">
+              <span class="inline-block w-1.5 h-1.5 rounded-full" style="background: var(--luxury-accent);"></span>
+              <span class="text-[10px] sm:text-[11px] font-medium" style="color: var(--luxury-accent);">${product.feature}</span>
+            </div>
+          </div>
+          <p class="text-[10px] sm:text-[11px] leading-relaxed opacity-50 line-clamp-2">${product.detail}</p>
+          <div class="pt-2 sm:pt-3 space-y-1.5" style="border-top: 1px solid rgba(212, 175, 55, 0.15);">
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] sm:text-[10px] opacity-40">جملة</span>
+              <span class="font-black text-sm sm:text-base price-tag">${product.wholesale.toLocaleString('ar-EG')} ج.م</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] sm:text-[10px] opacity-40">نص جملة</span>
+              <div class="flex items-center gap-1">
+                <span class="font-bold text-xs sm:text-sm" style="color: var(--luxury-gold);">${product.semi.toLocaleString('ar-EG')} ج.م</span>
+                <span class="text-[8px] sm:text-[9px]" style="color: var(--luxury-accent);">+${priceUpPercent}%</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-[9px] sm:text-[10px] opacity-40">قطاعي</span>
+              <div class="flex items-center gap-1">
+                <span class="font-bold text-xs sm:text-sm opacity-70">${product.retail.toLocaleString('ar-EG')} ج.م</span>
+                <span class="text-[8px] sm:text-[9px] opacity-50">+${priceUpPercent2}%</span>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 mt-3 sm:mt-4">
+            <button class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold btn-luxury transition-all" type="button">عرض التفاصيل</button>
+            <button class="px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-all text-white font-black" type="button" style="background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa94d); border: none; cursor: pointer; box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);">✨ قسط الآن</button>
+          </div>
+        </div>
+      `;
+
+      const [detailBtn, installmentBtn] = card.querySelectorAll('button');
+
+      detailBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openDetailPage(product.id);
+      });
+
+      installmentBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openInstallmentModal(product);
+      });
+
+      card.addEventListener('click', () => openDetailPage(product.id));
+
+      return card;
+    }
+
+    function updateQuickStats(filtered) {
+      const statsContainer = document.getElementById('quickStats');
+      const totalProducts = filtered.length;
+      const minPrice = filtered.length > 0 ? Math.min(...filtered.map(p => p.wholesale)) : 0;
+      const maxPrice = filtered.length > 0 ? Math.max(...filtered.map(p => p.retail)) : 0;
+      const avgPrice = filtered.length > 0 ? Math.round(filtered.reduce((sum, p) => sum + p.semi, 0) / filtered.length) : 0;
+
+      statsContainer.innerHTML = `
+        <div class="stat-box">
+          <div class="stat-number">${totalProducts}</div>
+          <div class="stat-label">المنتجات</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number price-tag">${minPrice.toLocaleString('ar-EG')}</div>
+          <div class="stat-label">الحد الأدنى</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number price-tag">${maxPrice.toLocaleString('ar-EG')}</div>
+          <div class="stat-label">الحد الأقصى</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number price-tag">${avgPrice.toLocaleString('ar-EG')}</div>
+          <div class="stat-label">السعر المتوسط</div>
+        </div>
+      `;
+    }
+
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      const noResults = document.getElementById('noResults');
+
+      let filtered = products;
+
+      if (activeCategory !== 'الكل') {
+        filtered = filtered.filter(p => p.category === activeCategory);
+      }
+
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filtered = filtered.filter(p =>
+          p.model.toLowerCase().includes(term) ||
+          p.feature.toLowerCase().includes(term) ||
+          p.detail.toLowerCase().includes(term) ||
+          p.category.toLowerCase().includes(term)
+        );
+      }
+
+      updateQuickStats(filtered);
+      grid.innerHTML = '';
+
+      if (filtered.length === 0) {
+        noResults.classList.remove('hidden');
+      } else {
+        noResults.classList.add('hidden');
+        filtered.forEach((p, i) => grid.appendChild(createProductCard(p, i)));
+      }
+
+      reinitIcons();
+    }
+
+    function openDetailPage(productId) {
+      const product = products.find(p => p.id === productId);
+      if (!product) return;
+
+      selectedProduct = product;
+      currentImageIndex = 0;
+      stopCarousel();
+
+      document.getElementById('detailTitle').textContent = selectedProduct.model;
+      showCurrentDetailImage();
+
+      const detailBody = document.getElementById('detailBody');
+      detailBody.innerHTML = `
+        <div class="space-y-4 sm:space-y-5">
+          <div>
+            <h3 class="text-xs sm:text-sm font-bold opacity-70 mb-2" style="color: var(--luxury-muted);">الفئة</h3>
+            <p class="text-sm sm:text-base" style="color: var(--luxury-accent);">${categoryLabels[selectedProduct.category] || selectedProduct.category}</p>
+          </div>
+          <div>
+            <h3 class="text-xs sm:text-sm font-bold opacity-70 mb-2" style="color: var(--luxury-muted);">الميزات الرئيسية</h3>
+            <p class="text-sm sm:text-base font-bold" style="color: var(--luxury-text);">${selectedProduct.feature}</p>
+          </div>
+          <div>
+            <h3 class="text-xs sm:text-sm font-bold opacity-70 mb-2" style="color: var(--luxury-muted);">الوصف الكامل</h3>
+            <p class="text-xs sm:text-sm leading-relaxed" style="color: var(--luxury-text);">${selectedProduct.detail}</p>
+          </div>
+          <div style="border-top: 1.5px solid rgba(212, 175, 55, 0.2); padding-top: 16px;">
+            <h3 class="text-xs sm:text-sm font-bold opacity-70 mb-3" style="color: var(--luxury-muted);">الأسعار</h3>
+            <div class="space-y-2.5 sm:space-y-3">
+              <div class="flex justify-between items-center p-2 sm:p-3 rounded-lg" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.15);">
+                <span class="text-xs sm:text-sm opacity-70">سعر الجملة</span>
+                <span class="font-black text-base sm:text-lg price-tag">${selectedProduct.wholesale.toLocaleString('ar-EG')} ج.م</span>
+              </div>
+              <div class="flex justify-between items-center p-2 sm:p-3 rounded-lg" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.15);">
+                <span class="text-xs sm:text-sm opacity-70">نص جملة (+10%)</span>
+                <span class="font-black text-base sm:text-lg" style="color: var(--luxury-gold);">${selectedProduct.semi.toLocaleString('ar-EG')} ج.م</span>
+              </div>
+              <div class="flex justify-between items-center p-2 sm:p-3 rounded-lg" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.15);">
+                <span class="text-xs sm:text-sm opacity-70">السعر القطاعي (+15%)</span>
+                <span class="font-black text-base sm:text-lg" style="color: var(--luxury-gold);">${selectedProduct.retail.toLocaleString('ar-EG')} ج.م</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('contactDetailBtn').onclick = () => {
+        const message = `السلام عليكم، أود الاستفسار عن المنتج:\n${selectedProduct.model}\n\nسعر الجملة: ${selectedProduct.wholesale} ج.م`;
+        openWhatsapp(message);
+      };
+
+      document.getElementById('shareDetailBtn').onclick = () => {
+        const text = `تحقق من هذا المنتج: ${selectedProduct.model}\nالسعر: ${selectedProduct.wholesale} ج.م\nالميزات: ${selectedProduct.feature}`;
+        shareText(text, selectedProduct.model);
+      };
+
+      document.getElementById('installmentDetailBtn').onclick = () => openInstallmentModal(selectedProduct);
+
+      document.getElementById('detailPageOverlay').classList.remove('hidden');
+      startCarousel();
+      reinitIcons();
+    }
+
+    function closeDetailPage() {
+      stopCarousel();
+      document.getElementById('detailPageOverlay').classList.add('hidden');
+      selectedProduct = null;
+      currentImageIndex = 0;
+      document.getElementById('detailImage').src = '';
+      document.getElementById('detailImage').alt = '';
+      updateImageCounter();
+    }
+
+    function updateZoom() {
+      const container = document.getElementById('productsContainer');
+      container.style.transform = `scale(${zoomLevel})`;
+      document.getElementById('zoomLabel').textContent = Math.round(zoomLevel * 100) + '%';
+    }
+
+    function updateContactLinks() {
+      const whatsappNum = sanitizePhone(appConfig.whatsapp_number);
+      const phoneNum = String(appConfig.phone_number || '');
+
+      const whatsappLink = document.getElementById('whatsappLink');
+      const phoneLink = document.getElementById('phoneLink');
+
+      if (whatsappLink) {
+        whatsappLink.href = whatsappNum ? `https://wa.me/${whatsappNum}` : '#';
+      }
+      if (phoneLink) {
+        phoneLink.href = phoneNum ? `tel:${phoneNum}` : '#';
+      }
+    }
+
+    function applyConfig(config) {
+      const bg = config.background_color || defaultConfig.background_color;
+      const textCol = config.text_color || defaultConfig.text_color;
+      const primary = config.primary_action_color || defaultConfig.primary_action_color;
+      const font = config.font_family || defaultConfig.font_family;
+      const fontSize = config.font_size || defaultConfig.font_size;
+
+      document.documentElement.style.setProperty('--luxury-dark', bg);
+      document.documentElement.style.setProperty('--luxury-accent', primary);
+      document.documentElement.style.setProperty('--luxury-text', textCol);
+      document.body.style.fontFamily = `${font}, Almarai, Tajawal, sans-serif`;
+      document.body.style.fontSize = fontSize + 'px';
+
+      document.getElementById('header-title').textContent = config.catalog_title || defaultConfig.catalog_title;
+      document.getElementById('header-company').textContent = config.company_name || defaultConfig.company_name;
+      document.getElementById('promoBanner').textContent = config.promo_text || defaultConfig.promo_text;
+      document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
+      document.body.style.background = `linear-gradient(135deg, ${bg} 0%, #1a1519 50%, #0f0f1e 100%)`;
+
+      updateContactLinks();
+      renderCategoryFilters();
+      renderProducts();
+    }
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      searchTerm = e.target.value.trim();
+      renderProducts();
+    });
+
+    document.getElementById('zoomInBtn').addEventListener('click', () => {
+      zoomLevel = Math.min(zoomLevel + 0.1, 2.5);
+      updateZoom();
+    });
+
+    document.getElementById('zoomOutBtn').addEventListener('click', () => {
+      zoomLevel = Math.max(zoomLevel - 0.1, 0.4);
+      updateZoom();
+    });
+
+    document.getElementById('printBtn').addEventListener('click', () => window.print());
+    document.getElementById('closeDetailBtn').addEventListener('click', closeDetailPage);
+    document.getElementById('prevImageBtn').addEventListener('click', prevImage);
+    document.getElementById('nextImageBtn').addEventListener('click', nextImage);
+
+    document.getElementById('detailPageOverlay').addEventListener('click', (e) => {
+      if (e.target.id === 'detailPageOverlay') closeDetailPage();
+    });
+
+    document.getElementById('closeInstallmentBtn').addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      document.getElementById('installmentModal').classList.add('hidden');
+    });
+
+    document.getElementById('installmentModal').addEventListener('click', (e) => {
+      if (e.target.id === 'installmentModal') {
+        e.preventDefault();
+        e.stopPropagation();
+        document.getElementById('installmentModal').classList.add('hidden');
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !document.getElementById('detailPageOverlay').classList.contains('hidden')) {
+        closeDetailPage();
+      }
+      if (e.key === 'Escape' && !document.getElementById('installmentModal').classList.contains('hidden')) {
+        document.getElementById('installmentModal').classList.add('hidden');
+      }
+    });
+
+    applyConfig(appConfig);
+    updateZoom();
+    reinitIcons();
+  </script>
+</body>
+</html>
