@@ -269,6 +269,24 @@
       background: linear-gradient(135deg, rgba(232, 161, 55, 0.7), rgba(244, 196, 48, 0.6));
     }
 
+    .installment-field {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      outline: none;
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      color: var(--luxury-text);
+      transition: all 0.25s ease;
+    }
+    .installment-field:focus {
+      border-color: rgba(212, 175, 55, 0.55);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.08);
+    }
+    .installment-field option {
+      color: #111;
+    }
+
     @media (max-width: 768px) {
       .detail-page-content { max-height: 90vh !important; }
     }
@@ -413,6 +431,45 @@
       return { semi, retail };
     };
 
+    const INSTALLMENT_RATES = {
+      3: 15,
+      6: 30,
+      9: 40,
+      12: 50
+    };
+
+    function getInstallmentRate(months) {
+      return INSTALLMENT_RATES[Number(months)] || 0;
+    }
+
+    function calculateInstallmentPlan(retailPrice, downPayment = 0, months = 0) {
+      const cashPrice = Number(retailPrice) || 0;
+      let deposit = Number(downPayment) || 0;
+      const period = Number(months) || 0;
+
+      if (!cashPrice || !period) return null;
+
+      if (deposit < 0) deposit = 0;
+      if (deposit > cashPrice) deposit = cashPrice;
+
+      const rate = getInstallmentRate(period);
+      const remaining = cashPrice - deposit;
+      const increaseAmount = remaining * (rate / 100);
+      const totalInstallment = remaining + increaseAmount;
+      const monthlyInstallment = totalInstallment / period;
+
+      return {
+        cashPrice,
+        downPayment: deposit,
+        remaining,
+        rate,
+        increaseAmount,
+        totalInstallment,
+        monthlyInstallment,
+        months: period
+      };
+    }
+
     const rawProducts = [
       { id:1, category:'Smart Watch', model:'OSW-801 (Watch 4 Plus)', wholesale:2250, feature:'شاشة HD 2 بوصة + مكالمات بلوتوث', detail:'شاشة HD لمس كاملة 2.01 بوصة - دعم مكالمات بلوتوث 5.3 - أكثر من 100 وضع رياضي - مراقبة معدل ضربات القلب وتشبع الأكسجين - مقاومة للماء IP68 - بطارية تدوم 7 أيام - معالج ذكي وسريع - تصميم أسود فاخر.', images:['https://m.media-amazon.com/images/I/61Yj9K3WJrL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61dK8ZWawjL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61uW5-DehTL._AC_SY679_.jpg', 'https://m.media-amazon.com/images/I/61QMl7jqw1L._AC_SY450_.jpg'] },
       { id:2, category:'Smart Watch', model:'OSW-820 (Watch 3 Pro)', wholesale:1600, feature:'شاشة AMOLED 1.43 بوصة أنيقة', detail:'شاشة AMOLED ملونة واضحة جداً - اتصال بلوتوث 5.3 سلس - تتبع معدل ضربات القلب والخطوات والنوم - تصميم أسود أنيق وقوي - مراقبة شاملة للياقة البدنية - بطارية 7 أيام - مناسب للاستخدام اليومي والنشط.', images:['https://m.media-amazon.com/images/I/410Y-wvmHxL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/91RRsnndsaL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/61KdxLIKnmL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61ORLbGRpCL._AC_SY450_.jpg'] },
@@ -542,45 +599,165 @@
     }
 
     function openInstallmentModal(product) {
-      const months = [3, 6, 12];
+      const monthsOptions = [3, 6, 9, 12];
       const installmentContent = document.getElementById('installmentContent');
-      installmentContent.innerHTML = '';
 
-      months.forEach(month => {
-        const monthlyAmount = Math.ceil(product.retail / month);
-        const option = document.createElement('button');
-        option.type = 'button';
-        option.className = 'w-full p-3 sm:p-4 rounded-lg cursor-pointer transition-all text-right';
-        option.style.cssText = 'background: rgba(212, 175, 55, 0.08); border: 1.5px solid rgba(212, 175, 55, 0.2);';
-        option.innerHTML = `
-          <div class="flex justify-between items-start">
-            <div>
-              <div class="font-bold text-sm sm:text-base" style="color: var(--luxury-text);">${month} شهور</div>
-              <div class="text-xs opacity-50 mt-1">${monthlyAmount.toLocaleString('ar-EG')} ج.م / شهر</div>
+      installmentContent.innerHTML = `
+        <div class="space-y-4">
+          <div class="p-3 rounded-xl" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2);">
+            <div class="flex items-center justify-between gap-3 mb-2">
+              <span class="text-sm opacity-70">المنتج</span>
+              <span class="text-sm font-bold" style="color: var(--luxury-accent);">${product.model}</span>
             </div>
-            <div class="text-right">
-              <div class="text-xs opacity-60">إجمالي</div>
-              <div class="font-bold price-tag text-sm">${product.retail.toLocaleString('ar-EG')} ج.م</div>
+            <div class="flex items-center justify-between gap-3">
+              <span class="text-sm opacity-70">السعر القطاعي</span>
+              <span class="text-base font-black price-tag">${product.retail.toLocaleString('ar-EG')} ج.م</span>
             </div>
           </div>
-        `;
-        option.addEventListener('mouseenter', () => {
-          option.style.background = 'rgba(212, 175, 80, 0.12)';
-          option.style.borderColor = 'rgba(212, 175, 55, 0.4)';
-        });
-        option.addEventListener('mouseleave', () => {
-          option.style.background = 'rgba(212, 175, 55, 0.08)';
-          option.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-        });
-        option.addEventListener('click', () => {
-          const message = `السلام عليكم، أود تقسيط المنتج:\n${product.model}\n\nالخيار: ${month} شهور\nالدفع الشهري: ${monthlyAmount.toLocaleString('ar-EG')} ج.م\nالإجمالي: ${product.retail.toLocaleString('ar-EG')} ج.م`;
-          openWhatsapp(message);
-          document.getElementById('installmentModal').classList.add('hidden');
-        });
-        installmentContent.appendChild(option);
-      });
+
+          <div class="grid grid-cols-1 gap-3">
+            <div>
+              <label class="block text-sm mb-2 opacity-80">المقدم</label>
+              <input
+                id="installmentDownPayment"
+                type="number"
+                min="0"
+                value="0"
+                placeholder="اكتب قيمة المقدم"
+                class="installment-field"
+              >
+            </div>
+
+            <div>
+              <label class="block text-sm mb-2 opacity-80">مدة التقسيط</label>
+              <select
+                id="installmentMonths"
+                class="installment-field"
+              >
+                <option value="">اختر مدة التقسيط</option>
+                ${monthsOptions.map(month => `<option value="${month}">${month} شهور</option>`).join('')}
+              </select>
+            </div>
+          </div>
+
+          <button
+            id="calculateInstallmentBtn"
+            type="button"
+            class="w-full py-3 rounded-xl font-black text-sm"
+            style="background: linear-gradient(135deg, #ff6b35, #ff8c42, #ffa94d); color: #fff; box-shadow: 0 8px 20px rgba(255, 107, 53, 0.3);"
+          >
+            احسب قسطك بنفسك
+          </button>
+
+          <div id="installmentResult" class="hidden p-4 rounded-xl space-y-3" style="background: rgba(212, 175, 55, 0.08); border: 1px solid rgba(212, 175, 55, 0.2);">
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">سعر القطاعي</span>
+              <span id="resultCashPrice" class="font-bold"></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">المقدم</span>
+              <span id="resultDownPayment" class="font-bold"></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">المبلغ المتبقي</span>
+              <span id="resultRemaining" class="font-bold"></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">نسبة الزيادة</span>
+              <span id="resultRate" class="font-bold"></span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-sm opacity-70">إجمالي مبلغ التقسيط</span>
+              <span id="resultTotal" class="font-bold"></span>
+            </div>
+            <div class="flex justify-between items-center pt-3" style="border-top: 1px solid rgba(212, 175, 55, 0.2);">
+              <span class="text-sm font-bold">القسط الشهري</span>
+              <span id="resultMonthly" class="text-lg font-black price-tag"></span>
+            </div>
+
+            <button
+              id="sendInstallmentWhatsappBtn"
+              type="button"
+              class="w-full py-3 rounded-xl font-black text-sm mt-2"
+              style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(244, 196, 48, 0.12)); border: 1px solid rgba(212, 175, 55, 0.35); color: var(--luxury-accent);"
+            >
+              إرسال تفاصيل التقسيط على واتساب
+            </button>
+          </div>
+        </div>
+      `;
 
       document.getElementById('installmentModal').classList.remove('hidden');
+
+      const downPaymentInput = document.getElementById('installmentDownPayment');
+      const monthsSelect = document.getElementById('installmentMonths');
+      const calculateBtn = document.getElementById('calculateInstallmentBtn');
+      const resultBox = document.getElementById('installmentResult');
+
+      const resultCashPrice = document.getElementById('resultCashPrice');
+      const resultDownPayment = document.getElementById('resultDownPayment');
+      const resultRemaining = document.getElementById('resultRemaining');
+      const resultRate = document.getElementById('resultRate');
+      const resultTotal = document.getElementById('resultTotal');
+      const resultMonthly = document.getElementById('resultMonthly');
+      const sendWhatsappBtn = document.getElementById('sendInstallmentWhatsappBtn');
+
+      let lastCalculatedPlan = null;
+
+      function renderInstallmentResult() {
+        const downPayment = Number(downPaymentInput.value) || 0;
+        const months = Number(monthsSelect.value);
+
+        if (!months) {
+          resultBox.classList.add('hidden');
+          lastCalculatedPlan = null;
+          return;
+        }
+
+        const plan = calculateInstallmentPlan(product.retail, downPayment, months);
+        if (!plan) {
+          resultBox.classList.add('hidden');
+          lastCalculatedPlan = null;
+          return;
+        }
+
+        lastCalculatedPlan = plan;
+        resultBox.classList.remove('hidden');
+
+        resultCashPrice.textContent = `${plan.cashPrice.toLocaleString('ar-EG')} ج.م`;
+        resultDownPayment.textContent = `${plan.downPayment.toLocaleString('ar-EG')} ج.م`;
+        resultRemaining.textContent = `${plan.remaining.toLocaleString('ar-EG')} ج.م`;
+        resultRate.textContent = `${plan.rate}%`;
+        resultTotal.textContent = `${plan.totalInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م`;
+        resultMonthly.textContent = `${plan.monthlyInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م`;
+      }
+
+      calculateBtn.addEventListener('click', renderInstallmentResult);
+      downPaymentInput.addEventListener('input', renderInstallmentResult);
+      monthsSelect.addEventListener('change', renderInstallmentResult);
+
+      sendWhatsappBtn.addEventListener('click', () => {
+        if (!lastCalculatedPlan) {
+          alert('احسب التقسيط أولاً.');
+          return;
+        }
+
+        const message =
+`السلام عليكم، أود طلب المنتج بالتقسيط:
+${product.model}
+
+السعر القطاعي: ${lastCalculatedPlan.cashPrice.toLocaleString('ar-EG')} ج.م
+المقدم: ${lastCalculatedPlan.downPayment.toLocaleString('ar-EG')} ج.م
+المبلغ المتبقي: ${lastCalculatedPlan.remaining.toLocaleString('ar-EG')} ج.م
+مدة التقسيط: ${lastCalculatedPlan.months} شهور
+نسبة الزيادة: ${lastCalculatedPlan.rate}%
+إجمالي التقسيط: ${lastCalculatedPlan.totalInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م
+القسط الشهري: ${lastCalculatedPlan.monthlyInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م`;
+
+        openWhatsapp(message);
+        document.getElementById('installmentModal').classList.add('hidden');
+      });
+
       reinitIcons();
     }
 
