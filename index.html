@@ -269,6 +269,26 @@
       background: linear-gradient(135deg, rgba(232, 161, 55, 0.7), rgba(244, 196, 48, 0.6));
     }
 
+
+    .admin-panel {
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.10), rgba(244, 196, 48, 0.04));
+      border: 1.5px solid rgba(232, 161, 55, 0.22);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+    }
+    .admin-input {
+      width: 100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      outline: none;
+      background: rgba(232, 161, 55, 0.08);
+      border: 1px solid rgba(232, 161, 55, 0.24);
+      color: var(--luxury-text);
+    }
+    .admin-input::placeholder { color: rgba(247, 243, 235, 0.45); }
+
     .installment-field {
       width: 100%;
       padding: 12px 14px;
@@ -285,6 +305,72 @@
     }
     .installment-field option {
       color: #111;
+    }
+
+
+    .installment-month-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .installment-month-card {
+      position: relative;
+      padding: 14px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.08), rgba(244, 196, 48, 0.04));
+      color: var(--luxury-text);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      overflow: hidden;
+      text-align: center;
+    }
+    .installment-month-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 45%, rgba(232, 161, 55, 0.10));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      pointer-events: none;
+    }
+    .installment-month-card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(212, 175, 55, 0.45);
+      box-shadow: 0 12px 24px rgba(232, 161, 55, 0.14);
+    }
+    .installment-month-card:hover::before {
+      opacity: 1;
+    }
+    .installment-month-card.active {
+      border-color: rgba(244, 196, 48, 0.8);
+      background: linear-gradient(135deg, rgba(232, 161, 55, 0.22), rgba(244, 196, 48, 0.12));
+      box-shadow: 0 0 0 1px rgba(244, 196, 48, 0.18), 0 14px 28px rgba(232, 161, 55, 0.18);
+    }
+    .installment-month-number {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: #ffd77a;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .installment-month-label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      opacity: 0.9;
+    }
+    .installment-month-rate {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      background: rgba(255,255,255,0.08);
+      color: var(--luxury-accent);
+      border: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     @media (max-width: 768px) {
@@ -306,16 +392,28 @@
       <div class="w-full px-3 sm:px-4 md:px-6 py-3 sm:py-4">
         <div class="flex items-center justify-between gap-3 flex-wrap">
           <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-            <div class="w-16 sm:w-20 h-16 sm:h-20 rounded-3xl flex-shrink-0 flex items-center justify-center"
-                 style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.4), rgba(201, 169, 97, 0.3)); backdrop-filter: blur(15px); border: 2.5px solid rgba(212, 175, 55, 0.6); box-shadow: 0 0 80px rgba(212, 175, 55, 0.5), 0 0 40px rgba(212, 175, 55, 0.3), inset 0 0 40px rgba(212, 175, 55, 0.2); overflow: hidden; position: relative;">
-              <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent); border-radius: 24px;"></div>
+            <div class="w-20 sm:w-24 h-20 sm:h-24 rounded-[28px] flex-shrink-0 flex items-center justify-center"
+                 style="background:
+                   radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22), transparent 42%),
+                   linear-gradient(135deg, rgba(212, 175, 55, 0.30), rgba(201, 169, 97, 0.18), rgba(10,10,19,0.18));
+                   backdrop-filter: blur(16px);
+                   border: 2px solid rgba(212, 175, 55, 0.45);
+                   box-shadow:
+                     0 0 0 1px rgba(255,255,255,0.05) inset,
+                     0 16px 38px rgba(0,0,0,0.28),
+                     0 0 32px rgba(212, 175, 55, 0.26),
+                     0 0 70px rgba(201, 169, 97, 0.14);
+                   overflow: hidden;
+                   position: relative;">
+              <div style="position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.14), transparent 55%); border-radius: 28px;"></div>
               <img id="logoImg" src="https://i.postimg.cc/3yTcWR5C/logo.png" alt="Logo"
-                   style="width:85%;height:85%;object-fit:contain;filter:drop-shadow(0 8px 20px rgba(212, 175, 55, 0.5)); position: relative; z-index: 1;"
+                   style="width:96%;height:96%;object-fit:contain;filter: drop-shadow(0 6px 12px rgba(0,0,0,0.18)) drop-shadow(0 0 20px rgba(212,175,55,0.22)); position: relative; z-index: 1;"
                    loading="lazy"
                    onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cdefs%3E%3ClinearGradient id=%22grad%22 x1=%220%25%22 y1=%220%25%22 x2=%22100%25%22 y2=%22100%25%22%3E%3Cstop offset=%220%25%22 style=%22stop-color:%23d4af37;stop-opacity:1%22/%3E%3Cstop offset=%22100%25%22 style=%22stop-color:%23c9a961;stop-opacity:1%22/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22url(%23grad)%22/%3E%3Ctext x=%2250%22 y=%2265%22 font-size=%2250%22 font-weight=%22900%22 text-anchor=%22middle%22 fill=%22%23000%22 font-family=%22Arial%22%3EO%3C/text%3E%3C/svg%3E';">
             </div>
             <div class="min-w-0">
               <h1 id="header-title" class="text-lg sm:text-2xl font-black tracking-tight header-glow truncate"></h1>
+              <p id="header-subtitle" class="text-sm sm:text-lg font-black mt-1 tracking-wide" style="color: #f6d58b; text-shadow: 0 2px 14px rgba(232, 161, 55, 0.18); letter-spacing: 0.3px;">بيت العز ستورز</p>
               <p id="header-company" class="text-xs sm:text-sm font-bold opacity-80" style="color: var(--luxury-muted);"></p>
             </div>
           </div>
@@ -346,6 +444,27 @@
 
     <main class="w-full px-3 sm:px-4 md:px-6 py-4 sm:py-6 page-content">
       <div id="quickStats" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6"></div>
+
+      <div class="admin-panel no-print">
+        <div class="flex items-center justify-between gap-3 flex-wrap mb-3">
+          <div>
+            <h3 class="text-sm sm:text-base font-black header-glow">إدارة القوائم</h3>
+            <p class="text-xs opacity-60 mt-1">تقدر تضيف قائمة جديدة أو تعدل اسم قائمة موجودة من داخل الصفحة.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <input id="newCategoryKey" class="admin-input" type="text" placeholder="اسم القائمة بالإنجليزي مثال: Chargers">
+          <input id="newCategoryLabel" class="admin-input" type="text" placeholder="اسم القائمة بالعربي مثال: شواحن">
+          <button id="addCategoryBtn" type="button" class="btn-luxury px-4 py-3 rounded-xl text-sm font-black">إضافة قائمة جديدة</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
+          <select id="renameCategorySelect" class="admin-input"></select>
+          <input id="renameCategoryLabel" class="admin-input" type="text" placeholder="الاسم الجديد الظاهر">
+          <button id="renameCategoryBtn" type="button" class="btn-luxury px-4 py-3 rounded-xl text-sm font-black">تعديل اسم القائمة</button>
+        </div>
+      </div>
       <div id="productsContainer" class="zoom-container origin-top">
         <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"></div>
       </div>
@@ -425,6 +544,9 @@
   </div>
 
   <script>
+    // ملاحظة: لا يوجد روبوت/شات بوت فعلي في هذا الكود الحالي.
+    // الموجود هنا كتالوج + واجهة عرض + تقسيط.
+    // لو تريد روبوت واتساب أو شات بوت، يحتاج ربط API أو خدمة خارجية مستقلة.
     const calculatePrices = (wholesale) => {
       const semi = Math.ceil((wholesale * 1.10) / 5) * 5;
       const retail = Math.ceil((wholesale * 1.15) / 10) * 10;
@@ -433,7 +555,7 @@
 
     const INSTALLMENT_RATES = {
       3: 15,
-      6: 30,
+      5: 30,
       9: 40,
       12: 50
     };
@@ -475,9 +597,9 @@
       { id:2, category:'Smart Watch', model:'OSW-820 (Watch 3 Pro)', wholesale:1600, feature:'شاشة AMOLED 1.43 بوصة أنيقة', detail:'شاشة AMOLED ملونة واضحة جداً - اتصال بلوتوث 5.3 سلس - تتبع معدل ضربات القلب والخطوات والنوم - تصميم أسود أنيق وقوي - مراقبة شاملة للياقة البدنية - بطارية 7 أيام - مناسب للاستخدام اليومي والنشط.', images:['https://m.media-amazon.com/images/I/410Y-wvmHxL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/91RRsnndsaL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/61KdxLIKnmL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61ORLbGRpCL._AC_SY450_.jpg'] },
       { id:3, category:'Smart Watch', model:'OSW-823 (Watch Lite)', wholesale:1200, feature:'مكالمات + شاشة HD 1.38 بوصة', detail:'مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - شاشة HD ملونة 1.38 بوصة - تتبع صحة 24 ساعة (نبضات القلب وتشبع الأكسجين) - أكثر من 100 وضع رياضي - مقاومة للماء IP68 - بطارية تدوم 7 أيام - تصميم متين ومقاوم للغبار.', images:['https://m.media-amazon.com/images/I/51JQKqlQkZL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/51hQ1EVFKDL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41JQZiXBLgL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41ASq5SxrJL._AC_SY450_.jpg'] },
       { id:4, category:'Smart Watch', model:'OSW-804 (Watch ER)', wholesale:1050, feature:'شاشة لمس HD 2 بوصة ذكية', detail:'شاشة لمس كاملة HD 2 بوصة عالية الدقة مع وضوح حيوي وألوان نابضة - مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - مراقبة معدل نبضات القلب ومستوى الأكسجين في الدم - 105 أوضاع رياضية متنوعة - مقاومة للماء والغبار IP68 - بطارية 7 أيام استخدام و 28 يوم استعداد - أدوات ذكية متعددة.', images:['https://m.media-amazon.com/images/I/41kxbkppx+L._AC_.jpg', 'https://m.media-amazon.com/images/I/61Zyxg83hfL._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/61RF1EYqB1L._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/51NPBd65xiL._AC_SX679_.jpg'] },
-      { id:7, category:'Audio', model:'OHP-917 (BoomPop Pro)', wholesale:2150, feature:'صوت غامر + Heavy Bass 40mm', detail:'مشغلات 40 ملم بتقنية هافي باس قوية - صوت عميق وديناميكي غامر - تقنية ANC متقدمة مع ميكروفونات عالية الحساسية - مكالمات واضحة جداً - مواد ممتازة بنية قوية جداً - تصميم احترافي رمادي جرافيت - أداء متين وطويل الأمد.', images:['https://m.media-amazon.com/images/I/41hYTbCtfML._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/81ygKBj01bL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/71kRM8u-XvL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/81+bVNLvfvL._AC_SY606_.jpg'] },
-      { id:8, category:'Audio', model:'OEB-E104DC (FreePods 3)', wholesale:1550, feature:'بلوتوث 5.2 + 36 ساعة تشغيل', detail:'اتصال بلوتوث 5.2 مستقر وسريع - وقت تشغيل إجمالي 36 ساعة (9 ساعات + 27 ساعة من العلبة) - 4 ميكروفونات ANC لمكالمات واضحة - صوت باس عميق وديناميكي رائع - مقاومة للماء IPX5 - شحن سريع - تحكم باللمس ذكي - تصميم أسود خفيف الوزن.', images:['https://m.media-amazon.com/images/I/61RuDMWoDYL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/6135YuoVhcL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61qxBRhUeAL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/719SNiHWISL._AC_SY450_.jpg'] },
-      { id:9, category:'Audio', model:'OTW-625 (FreePods Lite)', wholesale:1150, feature:'صوت نقي + بطارية 40 ساعة', detail:'تصميم أسود مريح للأذن وخفيف الوزن جداً - بطارية تدوم 40 ساعة إجمالية مع العلبة (8 ساعات من الشحنة الواحدة) - مقاومة للعرق والماء IPX4 - صوت نقي وواضح - تحكم باللمس سهل الاستخدام - شحن سريع فعال - مثالي للاستخدام اليومي والرياضة.', images:['https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t151933.157_2.jpg', 'https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t152019.081_2.jpg'] },
+      { id:7, category:'Headphones', model:'OHP-917 (BoomPop Pro)', wholesale:2150, feature:'صوت غامر + Heavy Bass 40mm', detail:'مشغلات 40 ملم بتقنية هافي باس قوية - صوت عميق وديناميكي غامر - تقنية ANC متقدمة مع ميكروفونات عالية الحساسية - مكالمات واضحة جداً - مواد ممتازة بنية قوية جداً - تصميم احترافي رمادي جرافيت - أداء متين وطويل الأمد.', images:['https://m.media-amazon.com/images/I/41hYTbCtfML._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/81ygKBj01bL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/71kRM8u-XvL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/81+bVNLvfvL._AC_SY606_.jpg'] },
+      { id:8, category:'Earbuds', model:'OEB-E104DC (FreePods 3)', wholesale:1550, feature:'بلوتوث 5.2 + 36 ساعة تشغيل', detail:'اتصال بلوتوث 5.2 مستقر وسريع - وقت تشغيل إجمالي 36 ساعة (9 ساعات + 27 ساعة من العلبة) - 4 ميكروفونات ANC لمكالمات واضحة - صوت باس عميق وديناميكي رائع - مقاومة للماء IPX5 - شحن سريع - تحكم باللمس ذكي - تصميم أسود خفيف الوزن.', images:['https://m.media-amazon.com/images/I/61RuDMWoDYL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/6135YuoVhcL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61qxBRhUeAL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/719SNiHWISL._AC_SY450_.jpg'] },
+      { id:9, category:'Earbuds', model:'OTW-625 (FreePods Lite)', wholesale:1150, feature:'صوت نقي + بطارية 40 ساعة', detail:'تصميم أسود مريح للأذن وخفيف الوزن جداً - بطارية تدوم 40 ساعة إجمالية مع العلبة (8 ساعات من الشحنة الواحدة) - مقاومة للعرق والماء IPX4 - صوت نقي وواضح - تحكم باللمس سهل الاستخدام - شحن سريع فعال - مثالي للاستخدام اليومي والرياضة.', images:['https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t151933.157_2.jpg', 'https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t152019.081_2.jpg'] },
       { id:10, category:'Power', model:'OPB-P5201 (PowerGo Ultra)', wholesale:1650, feature:'20000mAh + 4 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 20000 ملي أمبير ضخمة - 4 كابلات مدمجة (USB-C، Micro USB، Lightning، USB-A) - شحن حتى 4 أجهزة معاً في وقت واحد - مصباح LED قوي مع منبه SOS - حماية ذكية من التيار المنخفض - موصلات نحاسية عالية الجودة - تصميم متين مقاوم للالتفاف - شحن سريع 12 واط.', images:['https://m.media-amazon.com/images/I/61pl+tAmrWL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71EJcdphYRL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71YkTI7Qf+L._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/61dZAlkHhyL._AC_SX466_.jpg'] },
       { id:11, category:'Power', model:'OPB-P5101 (PowerGo)', wholesale:950, feature:'10000mAh + 3 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 10000 ملي أمبير - 3 كابلات مدمجة (USB-C، Micro USB، Lightning) - 2 منفذ USB-A للشحن السريع - شحن سريع 12 وات - حماية متعددة الطبقات - تصميم أخضر مريح - وزن خفيف 200 جرام - مثالي للرحلات اليومية.', images:['https://m.media-amazon.com/images/I/51I2C10W3AL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41+fo-UfrJL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41JXM7Rt0PL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41Am1Yf4+7L._AC_SX466_.jpg'] },
     ];
@@ -487,14 +609,66 @@
       return { ...p, semi, retail };
     });
 
-    const categories = ['الكل', ...new Set(products.map(p => p.category))];
-    const categoryIcons = { 'Smart Watch': 'watch', 'Audio': 'headphones', 'Power': 'battery', 'Cables': 'link' };
-    const categoryLabels = { 'Smart Watch': 'ساعات ذكية', 'Audio': 'سماعات', 'Power': 'باور بانك', 'Cables': 'كابلات' };
+    const customCategoryConfig = {
+      'Smart Watch': { label: 'ساعات ذكية', icon: 'watch' },
+      'Mobile Phones': { label: 'موبايلات', icon: 'smartphone' },
+      'Cables': { label: 'كابلات', icon: 'link' },
+      'Chargers': { label: 'شواحن', icon: 'battery-charging' },
+      'Cases': { label: 'جرابات', icon: 'shield' },
+      'Earbuds': { label: 'سماعات', icon: 'ear' },
+      'Headphones': { label: 'هيدفونات', icon: 'headphones' },
+      'Power': { label: 'باور بانك', icon: 'battery' }
+    };
+
+    function buildCategoryConfig(productsList) {
+      const detectedCategories = [...new Set(productsList.map(p => p.category).filter(Boolean))];
+      const mergedConfig = { ...customCategoryConfig };
+
+      detectedCategories.forEach(category => {
+        if (!mergedConfig[category]) {
+          mergedConfig[category] = { label: category, icon: 'box' };
+        }
+      });
+
+      return mergedConfig;
+    }
+
+    let categoryConfig = buildCategoryConfig(products);
+    let categories = ['الكل', ...Object.keys(categoryConfig)];
+    let categoryIcons = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.icon || 'box']));
+    let categoryLabels = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.label || key]));
+
+    function refreshCategorySystem() {
+      categoryConfig = buildCategoryConfig(products);
+      categories = ['الكل', ...Object.keys(categoryConfig)];
+      categoryIcons = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.icon || 'box']));
+      categoryLabels = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.label || key]));
+    }
+
+    window.catalogManager = {
+      addCategory(key, label, icon = 'box') {
+        if (!key) return;
+        customCategoryConfig[key] = { label: label || key, icon };
+        refreshCategorySystem();
+        renderCategoryFilters();
+        renderProducts();
+      },
+      renameCategory(key, newLabel) {
+        if (!key || !customCategoryConfig[key]) return;
+        customCategoryConfig[key].label = newLabel || key;
+        refreshCategorySystem();
+        renderCategoryFilters();
+        renderProducts();
+      },
+      getCategories() {
+        return categories.slice();
+      }
+    };
 
     const defaultConfig = {
-      catalog_title: 'كتالوج المنتجات',
-      company_name: 'بيت العز',
-      promo_text: '🎉 اطلب الآن واحصل على خصم حتى 20% على كل المنتجات!',
+      catalog_title: 'Beit El Ezz Stores',
+      company_name: 'أقوى عروض الموبايلات والإكسسوارات',
+      promo_text: '🎉 اطلب 3 منتجات واحصل على خصم 20%!',
       footer_text: 'جميع الأسعار قابلة للتغيير - تواصل معنا للطلبات',
       whatsapp_number: '201270296054',
       phone_number: '+20100123456',
@@ -599,7 +773,7 @@
     }
 
     function openInstallmentModal(product) {
-      const monthsOptions = [3, 6, 9, 12];
+      const monthsOptions = [3, 5, 9, 12];
       const installmentContent = document.getElementById('installmentContent');
 
       installmentContent.innerHTML = `
@@ -630,13 +804,19 @@
 
             <div>
               <label class="block text-sm mb-2 opacity-80">مدة التقسيط</label>
-              <select
-                id="installmentMonths"
-                class="installment-field"
-              >
-                <option value="">اختر مدة التقسيط</option>
-                ${monthsOptions.map(month => `<option value="${month}">${month} شهور</option>`).join('')}
-              </select>
+              <input id="installmentMonths" type="hidden" value="">
+              <div class="installment-month-grid">
+                ${monthsOptions.map(month => `
+                  <button
+                    type="button"
+                    class="installment-month-card"
+                    data-month="${month}"
+                  >
+                    <span class="installment-month-number">${month}</span>
+                    <span class="installment-month-label">شهور</span>
+                  </button>
+                `).join('')}
+              </div>
             </div>
           </div>
 
@@ -663,10 +843,6 @@
               <span id="resultRemaining" class="font-bold"></span>
             </div>
             <div class="flex justify-between items-center">
-              <span class="text-sm opacity-70">نسبة الزيادة</span>
-              <span id="resultRate" class="font-bold"></span>
-            </div>
-            <div class="flex justify-between items-center">
               <span class="text-sm opacity-70">إجمالي مبلغ التقسيط</span>
               <span id="resultTotal" class="font-bold"></span>
             </div>
@@ -678,10 +854,11 @@
             <button
               id="sendInstallmentWhatsappBtn"
               type="button"
-              class="w-full py-3 rounded-xl font-black text-sm mt-2"
+              class="w-full py-3 rounded-xl font-black text-sm mt-2 flex items-center justify-center gap-2"
               style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.18), rgba(244, 196, 48, 0.12)); border: 1px solid rgba(212, 175, 55, 0.35); color: var(--luxury-accent);"
             >
-              إرسال تفاصيل التقسيط على واتساب
+              <i data-lucide="message-circle" style="width:18px;height:18px;"></i>
+              <span>قسطلي دلوقتي</span>
             </button>
           </div>
         </div>
@@ -691,13 +868,27 @@
 
       const downPaymentInput = document.getElementById('installmentDownPayment');
       const monthsSelect = document.getElementById('installmentMonths');
+      const monthCards = Array.from(installmentContent.querySelectorAll('.installment-month-card'));
       const calculateBtn = document.getElementById('calculateInstallmentBtn');
       const resultBox = document.getElementById('installmentResult');
+
+      function setActiveMonth(month) {
+        monthsSelect.value = month || '';
+        monthCards.forEach(card => {
+          card.classList.toggle('active', Number(card.dataset.month) === Number(month));
+        });
+      }
+
+      monthCards.forEach(card => {
+        card.addEventListener('click', () => {
+          setActiveMonth(card.dataset.month);
+          renderInstallmentResult();
+        });
+      });
 
       const resultCashPrice = document.getElementById('resultCashPrice');
       const resultDownPayment = document.getElementById('resultDownPayment');
       const resultRemaining = document.getElementById('resultRemaining');
-      const resultRate = document.getElementById('resultRate');
       const resultTotal = document.getElementById('resultTotal');
       const resultMonthly = document.getElementById('resultMonthly');
       const sendWhatsappBtn = document.getElementById('sendInstallmentWhatsappBtn');
@@ -727,7 +918,6 @@
         resultCashPrice.textContent = `${plan.cashPrice.toLocaleString('ar-EG')} ج.م`;
         resultDownPayment.textContent = `${plan.downPayment.toLocaleString('ar-EG')} ج.م`;
         resultRemaining.textContent = `${plan.remaining.toLocaleString('ar-EG')} ج.م`;
-        resultRate.textContent = `${plan.rate}%`;
         resultTotal.textContent = `${plan.totalInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م`;
         resultMonthly.textContent = `${plan.monthlyInstallment.toLocaleString('ar-EG', { maximumFractionDigits: 2 })} ج.م`;
       }
@@ -735,6 +925,7 @@
       calculateBtn.addEventListener('click', renderInstallmentResult);
       downPaymentInput.addEventListener('input', renderInstallmentResult);
       monthsSelect.addEventListener('change', renderInstallmentResult);
+      setActiveMonth('');
 
       sendWhatsappBtn.addEventListener('click', () => {
         if (!lastCalculatedPlan) {
@@ -1025,6 +1216,66 @@ ${product.model}
       }
     }
 
+
+    function populateCategoryManager() {
+      const renameSelect = document.getElementById('renameCategorySelect');
+      if (!renameSelect) return;
+
+      renameSelect.innerHTML = '<option value="">اختر قائمة</option>' + categories
+        .filter(cat => cat !== 'الكل')
+        .map(cat => `<option value="${cat}">${categoryLabels[cat] || cat}</option>`)
+        .join('');
+    }
+
+    function initCategoryManager() {
+      const addBtn = document.getElementById('addCategoryBtn');
+      const renameBtn = document.getElementById('renameCategoryBtn');
+
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          const keyInput = document.getElementById('newCategoryKey');
+          const labelInput = document.getElementById('newCategoryLabel');
+          const key = (keyInput.value || '').trim();
+          const label = (labelInput.value || '').trim();
+
+          if (!key) {
+            alert('اكتب اسم القائمة الأساسي أولاً.');
+            return;
+          }
+
+          window.catalogManager.addCategory(key, label || key);
+          keyInput.value = '';
+          labelInput.value = '';
+          populateCategoryManager();
+          alert('تمت إضافة القائمة بنجاح.');
+        });
+      }
+
+      if (renameBtn) {
+        renameBtn.addEventListener('click', () => {
+          const select = document.getElementById('renameCategorySelect');
+          const labelInput = document.getElementById('renameCategoryLabel');
+          const key = select.value;
+          const newLabel = (labelInput.value || '').trim();
+
+          if (!key) {
+            alert('اختر القائمة التي تريد تعديلها.');
+            return;
+          }
+
+          if (!newLabel) {
+            alert('اكتب الاسم الجديد أولاً.');
+            return;
+          }
+
+          window.catalogManager.renameCategory(key, newLabel);
+          labelInput.value = '';
+          populateCategoryManager();
+          alert('تم تعديل اسم القائمة.');
+        });
+      }
+    }
+
     function applyConfig(config) {
       const bg = config.background_color || defaultConfig.background_color;
       const textCol = config.text_color || defaultConfig.text_color;
@@ -1044,9 +1295,11 @@ ${product.model}
       document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
       document.body.style.background = `linear-gradient(135deg, ${bg} 0%, #1a1519 50%, #0f0f1e 100%)`;
 
+      refreshCategorySystem();
       updateContactLinks();
       renderCategoryFilters();
       renderProducts();
+      populateCategoryManager();
     }
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -1097,6 +1350,7 @@ ${product.model}
     });
 
     applyConfig(appConfig);
+    initCategoryManager();
     updateZoom();
     reinitIcons();
   </script>
