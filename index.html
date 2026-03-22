@@ -269,26 +269,6 @@
       background: linear-gradient(135deg, rgba(232, 161, 55, 0.7), rgba(244, 196, 48, 0.6));
     }
 
-
-    .admin-panel {
-      background: linear-gradient(135deg, rgba(232, 161, 55, 0.10), rgba(244, 196, 48, 0.04));
-      border: 1.5px solid rgba(232, 161, 55, 0.22);
-      border-radius: 18px;
-      padding: 16px;
-      margin-bottom: 20px;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-    }
-    .admin-input {
-      width: 100%;
-      padding: 11px 12px;
-      border-radius: 12px;
-      outline: none;
-      background: rgba(232, 161, 55, 0.08);
-      border: 1px solid rgba(232, 161, 55, 0.24);
-      color: var(--luxury-text);
-    }
-    .admin-input::placeholder { color: rgba(247, 243, 235, 0.45); }
-
     .installment-field {
       width: 100%;
       padding: 12px 14px;
@@ -444,27 +424,6 @@
 
     <main class="w-full px-3 sm:px-4 md:px-6 py-4 sm:py-6 page-content">
       <div id="quickStats" class="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 mb-6"></div>
-
-      <div class="admin-panel no-print">
-        <div class="flex items-center justify-between gap-3 flex-wrap mb-3">
-          <div>
-            <h3 class="text-sm sm:text-base font-black header-glow">إدارة القوائم</h3>
-            <p class="text-xs opacity-60 mt-1">تقدر تضيف قائمة جديدة أو تعدل اسم قائمة موجودة من داخل الصفحة.</p>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <input id="newCategoryKey" class="admin-input" type="text" placeholder="اسم القائمة بالإنجليزي مثال: Chargers">
-          <input id="newCategoryLabel" class="admin-input" type="text" placeholder="اسم القائمة بالعربي مثال: شواحن">
-          <button id="addCategoryBtn" type="button" class="btn-luxury px-4 py-3 rounded-xl text-sm font-black">إضافة قائمة جديدة</button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mt-3">
-          <select id="renameCategorySelect" class="admin-input"></select>
-          <input id="renameCategoryLabel" class="admin-input" type="text" placeholder="الاسم الجديد الظاهر">
-          <button id="renameCategoryBtn" type="button" class="btn-luxury px-4 py-3 rounded-xl text-sm font-black">تعديل اسم القائمة</button>
-        </div>
-      </div>
       <div id="productsContainer" class="zoom-container origin-top">
         <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4"></div>
       </div>
@@ -544,9 +503,6 @@
   </div>
 
   <script>
-    // ملاحظة: لا يوجد روبوت/شات بوت فعلي في هذا الكود الحالي.
-    // الموجود هنا كتالوج + واجهة عرض + تقسيط.
-    // لو تريد روبوت واتساب أو شات بوت، يحتاج ربط API أو خدمة خارجية مستقلة.
     const calculatePrices = (wholesale) => {
       const semi = Math.ceil((wholesale * 1.10) / 5) * 5;
       const retail = Math.ceil((wholesale * 1.15) / 10) * 10;
@@ -597,9 +553,9 @@
       { id:2, category:'Smart Watch', model:'OSW-820 (Watch 3 Pro)', wholesale:1600, feature:'شاشة AMOLED 1.43 بوصة أنيقة', detail:'شاشة AMOLED ملونة واضحة جداً - اتصال بلوتوث 5.3 سلس - تتبع معدل ضربات القلب والخطوات والنوم - تصميم أسود أنيق وقوي - مراقبة شاملة للياقة البدنية - بطارية 7 أيام - مناسب للاستخدام اليومي والنشط.', images:['https://m.media-amazon.com/images/I/410Y-wvmHxL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/91RRsnndsaL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/61KdxLIKnmL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61ORLbGRpCL._AC_SY450_.jpg'] },
       { id:3, category:'Smart Watch', model:'OSW-823 (Watch Lite)', wholesale:1200, feature:'مكالمات + شاشة HD 1.38 بوصة', detail:'مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - شاشة HD ملونة 1.38 بوصة - تتبع صحة 24 ساعة (نبضات القلب وتشبع الأكسجين) - أكثر من 100 وضع رياضي - مقاومة للماء IP68 - بطارية تدوم 7 أيام - تصميم متين ومقاوم للغبار.', images:['https://m.media-amazon.com/images/I/51JQKqlQkZL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/51hQ1EVFKDL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41JQZiXBLgL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/41ASq5SxrJL._AC_SY450_.jpg'] },
       { id:4, category:'Smart Watch', model:'OSW-804 (Watch ER)', wholesale:1050, feature:'شاشة لمس HD 2 بوصة ذكية', detail:'شاشة لمس كاملة HD 2 بوصة عالية الدقة مع وضوح حيوي وألوان نابضة - مكالمات لاسلكية عالية الدقة مع بلوتوث 5.3 - مراقبة معدل نبضات القلب ومستوى الأكسجين في الدم - 105 أوضاع رياضية متنوعة - مقاومة للماء والغبار IP68 - بطارية 7 أيام استخدام و 28 يوم استعداد - أدوات ذكية متعددة.', images:['https://m.media-amazon.com/images/I/41kxbkppx+L._AC_.jpg', 'https://m.media-amazon.com/images/I/61Zyxg83hfL._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/61RF1EYqB1L._AC_SX679_.jpg', 'https://m.media-amazon.com/images/I/51NPBd65xiL._AC_SX679_.jpg'] },
-      { id:7, category:'Headphones', model:'OHP-917 (BoomPop Pro)', wholesale:2150, feature:'صوت غامر + Heavy Bass 40mm', detail:'مشغلات 40 ملم بتقنية هافي باس قوية - صوت عميق وديناميكي غامر - تقنية ANC متقدمة مع ميكروفونات عالية الحساسية - مكالمات واضحة جداً - مواد ممتازة بنية قوية جداً - تصميم احترافي رمادي جرافيت - أداء متين وطويل الأمد.', images:['https://m.media-amazon.com/images/I/41hYTbCtfML._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/81ygKBj01bL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/71kRM8u-XvL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/81+bVNLvfvL._AC_SY606_.jpg'] },
-      { id:8, category:'Earbuds', model:'OEB-E104DC (FreePods 3)', wholesale:1550, feature:'بلوتوث 5.2 + 36 ساعة تشغيل', detail:'اتصال بلوتوث 5.2 مستقر وسريع - وقت تشغيل إجمالي 36 ساعة (9 ساعات + 27 ساعة من العلبة) - 4 ميكروفونات ANC لمكالمات واضحة - صوت باس عميق وديناميكي رائع - مقاومة للماء IPX5 - شحن سريع - تحكم باللمس ذكي - تصميم أسود خفيف الوزن.', images:['https://m.media-amazon.com/images/I/61RuDMWoDYL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/6135YuoVhcL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61qxBRhUeAL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/719SNiHWISL._AC_SY450_.jpg'] },
-      { id:9, category:'Earbuds', model:'OTW-625 (FreePods Lite)', wholesale:1150, feature:'صوت نقي + بطارية 40 ساعة', detail:'تصميم أسود مريح للأذن وخفيف الوزن جداً - بطارية تدوم 40 ساعة إجمالية مع العلبة (8 ساعات من الشحنة الواحدة) - مقاومة للعرق والماء IPX4 - صوت نقي وواضح - تحكم باللمس سهل الاستخدام - شحن سريع فعال - مثالي للاستخدام اليومي والرياضة.', images:['https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t151933.157_2.jpg', 'https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t152019.081_2.jpg'] },
+      { id:7, category:'Audio', model:'OHP-917 (BoomPop Pro)', wholesale:2150, feature:'صوت غامر + Heavy Bass 40mm', detail:'مشغلات 40 ملم بتقنية هافي باس قوية - صوت عميق وديناميكي غامر - تقنية ANC متقدمة مع ميكروفونات عالية الحساسية - مكالمات واضحة جداً - مواد ممتازة بنية قوية جداً - تصميم احترافي رمادي جرافيت - أداء متين وطويل الأمد.', images:['https://m.media-amazon.com/images/I/41hYTbCtfML._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/81ygKBj01bL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/71kRM8u-XvL._AC_SY606_.jpg', 'https://m.media-amazon.com/images/I/81+bVNLvfvL._AC_SY606_.jpg'] },
+      { id:8, category:'Audio', model:'OEB-E104DC (FreePods 3)', wholesale:1550, feature:'بلوتوث 5.2 + 36 ساعة تشغيل', detail:'اتصال بلوتوث 5.2 مستقر وسريع - وقت تشغيل إجمالي 36 ساعة (9 ساعات + 27 ساعة من العلبة) - 4 ميكروفونات ANC لمكالمات واضحة - صوت باس عميق وديناميكي رائع - مقاومة للماء IPX5 - شحن سريع - تحكم باللمس ذكي - تصميم أسود خفيف الوزن.', images:['https://m.media-amazon.com/images/I/61RuDMWoDYL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/6135YuoVhcL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/61qxBRhUeAL._AC_SY450_.jpg', 'https://m.media-amazon.com/images/I/719SNiHWISL._AC_SY450_.jpg'] },
+      { id:9, category:'Audio', model:'OTW-625 (FreePods Lite)', wholesale:1150, feature:'صوت نقي + بطارية 40 ساعة', detail:'تصميم أسود مريح للأذن وخفيف الوزن جداً - بطارية تدوم 40 ساعة إجمالية مع العلبة (8 ساعات من الشحنة الواحدة) - مقاومة للعرق والماء IPX4 - صوت نقي وواضح - تحكم باللمس سهل الاستخدام - شحن سريع فعال - مثالي للاستخدام اليومي والرياضة.', images:['https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t151933.157_2.jpg', 'https://r2media.horizondm.com/catalog/product/cache/257553d71735e96dcdf7e87f4b22e6bc/_/-/_-_2024-12-17t152019.081_2.jpg'] },
       { id:10, category:'Power', model:'OPB-P5201 (PowerGo Ultra)', wholesale:1650, feature:'20000mAh + 4 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 20000 ملي أمبير ضخمة - 4 كابلات مدمجة (USB-C، Micro USB، Lightning، USB-A) - شحن حتى 4 أجهزة معاً في وقت واحد - مصباح LED قوي مع منبه SOS - حماية ذكية من التيار المنخفض - موصلات نحاسية عالية الجودة - تصميم متين مقاوم للالتفاف - شحن سريع 12 واط.', images:['https://m.media-amazon.com/images/I/61pl+tAmrWL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71EJcdphYRL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/71YkTI7Qf+L._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/61dZAlkHhyL._AC_SX466_.jpg'] },
       { id:11, category:'Power', model:'OPB-P5101 (PowerGo)', wholesale:950, feature:'10000mAh + 3 كابلات مدمجة', detail:'سعة ليثيوم بوليمر 10000 ملي أمبير - 3 كابلات مدمجة (USB-C، Micro USB، Lightning) - 2 منفذ USB-A للشحن السريع - شحن سريع 12 وات - حماية متعددة الطبقات - تصميم أخضر مريح - وزن خفيف 200 جرام - مثالي للرحلات اليومية.', images:['https://m.media-amazon.com/images/I/51I2C10W3AL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41+fo-UfrJL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41JXM7Rt0PL._AC_SX466_.jpg', 'https://m.media-amazon.com/images/I/41Am1Yf4+7L._AC_SX466_.jpg'] },
     ];
@@ -609,61 +565,9 @@
       return { ...p, semi, retail };
     });
 
-    const customCategoryConfig = {
-      'Smart Watch': { label: 'ساعات ذكية', icon: 'watch' },
-      'Mobile Phones': { label: 'موبايلات', icon: 'smartphone' },
-      'Cables': { label: 'كابلات', icon: 'link' },
-      'Chargers': { label: 'شواحن', icon: 'battery-charging' },
-      'Cases': { label: 'جرابات', icon: 'shield' },
-      'Earbuds': { label: 'سماعات', icon: 'ear' },
-      'Headphones': { label: 'هيدفونات', icon: 'headphones' },
-      'Power': { label: 'باور بانك', icon: 'battery' }
-    };
-
-    function buildCategoryConfig(productsList) {
-      const detectedCategories = [...new Set(productsList.map(p => p.category).filter(Boolean))];
-      const mergedConfig = { ...customCategoryConfig };
-
-      detectedCategories.forEach(category => {
-        if (!mergedConfig[category]) {
-          mergedConfig[category] = { label: category, icon: 'box' };
-        }
-      });
-
-      return mergedConfig;
-    }
-
-    let categoryConfig = buildCategoryConfig(products);
-    let categories = ['الكل', ...Object.keys(categoryConfig)];
-    let categoryIcons = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.icon || 'box']));
-    let categoryLabels = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.label || key]));
-
-    function refreshCategorySystem() {
-      categoryConfig = buildCategoryConfig(products);
-      categories = ['الكل', ...Object.keys(categoryConfig)];
-      categoryIcons = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.icon || 'box']));
-      categoryLabels = Object.fromEntries(Object.entries(categoryConfig).map(([key, value]) => [key, value.label || key]));
-    }
-
-    window.catalogManager = {
-      addCategory(key, label, icon = 'box') {
-        if (!key) return;
-        customCategoryConfig[key] = { label: label || key, icon };
-        refreshCategorySystem();
-        renderCategoryFilters();
-        renderProducts();
-      },
-      renameCategory(key, newLabel) {
-        if (!key || !customCategoryConfig[key]) return;
-        customCategoryConfig[key].label = newLabel || key;
-        refreshCategorySystem();
-        renderCategoryFilters();
-        renderProducts();
-      },
-      getCategories() {
-        return categories.slice();
-      }
-    };
+    const categories = ['الكل', ...new Set(products.map(p => p.category))];
+    const categoryIcons = { 'Smart Watch': 'watch', 'Audio': 'headphones', 'Power': 'battery', 'Cables': 'link' };
+    const categoryLabels = { 'Smart Watch': 'ساعات ذكية', 'Audio': 'سماعات', 'Power': 'باور بانك', 'Cables': 'كابلات' };
 
     const defaultConfig = {
       catalog_title: 'Beit El Ezz Stores',
@@ -1216,66 +1120,6 @@ ${product.model}
       }
     }
 
-
-    function populateCategoryManager() {
-      const renameSelect = document.getElementById('renameCategorySelect');
-      if (!renameSelect) return;
-
-      renameSelect.innerHTML = '<option value="">اختر قائمة</option>' + categories
-        .filter(cat => cat !== 'الكل')
-        .map(cat => `<option value="${cat}">${categoryLabels[cat] || cat}</option>`)
-        .join('');
-    }
-
-    function initCategoryManager() {
-      const addBtn = document.getElementById('addCategoryBtn');
-      const renameBtn = document.getElementById('renameCategoryBtn');
-
-      if (addBtn) {
-        addBtn.addEventListener('click', () => {
-          const keyInput = document.getElementById('newCategoryKey');
-          const labelInput = document.getElementById('newCategoryLabel');
-          const key = (keyInput.value || '').trim();
-          const label = (labelInput.value || '').trim();
-
-          if (!key) {
-            alert('اكتب اسم القائمة الأساسي أولاً.');
-            return;
-          }
-
-          window.catalogManager.addCategory(key, label || key);
-          keyInput.value = '';
-          labelInput.value = '';
-          populateCategoryManager();
-          alert('تمت إضافة القائمة بنجاح.');
-        });
-      }
-
-      if (renameBtn) {
-        renameBtn.addEventListener('click', () => {
-          const select = document.getElementById('renameCategorySelect');
-          const labelInput = document.getElementById('renameCategoryLabel');
-          const key = select.value;
-          const newLabel = (labelInput.value || '').trim();
-
-          if (!key) {
-            alert('اختر القائمة التي تريد تعديلها.');
-            return;
-          }
-
-          if (!newLabel) {
-            alert('اكتب الاسم الجديد أولاً.');
-            return;
-          }
-
-          window.catalogManager.renameCategory(key, newLabel);
-          labelInput.value = '';
-          populateCategoryManager();
-          alert('تم تعديل اسم القائمة.');
-        });
-      }
-    }
-
     function applyConfig(config) {
       const bg = config.background_color || defaultConfig.background_color;
       const textCol = config.text_color || defaultConfig.text_color;
@@ -1295,11 +1139,9 @@ ${product.model}
       document.getElementById('footer-text').textContent = config.footer_text || defaultConfig.footer_text;
       document.body.style.background = `linear-gradient(135deg, ${bg} 0%, #1a1519 50%, #0f0f1e 100%)`;
 
-      refreshCategorySystem();
       updateContactLinks();
       renderCategoryFilters();
       renderProducts();
-      populateCategoryManager();
     }
 
     document.getElementById('searchInput').addEventListener('input', (e) => {
@@ -1350,7 +1192,6 @@ ${product.model}
     });
 
     applyConfig(appConfig);
-    initCategoryManager();
     updateZoom();
     reinitIcons();
   </script>
